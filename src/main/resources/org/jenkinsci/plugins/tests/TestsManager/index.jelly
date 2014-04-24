@@ -1,0 +1,63 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:p="/lib/hudson/project">
+<l:layout title="Tests" secured="true">
+<j:set var="descriptor" value="${it.descriptor}" />
+<st:bind var="it" value="${it}" />
+<st:bind var="descriptor" value="${it.descriptor}" />
+<script type="text/javascript" src="${rootURL}/plugin/Tests/tests.js"/>
+<script type="text/javascript" src="${rootURL}/plugin/Tests/jquery-1.11.0.min.js"/>
+<l:header/>
+    <l:side-panel>
+        <l:tasks>
+            <l:task icon="images/24x24/up.gif" href="${rootURL}/" title="${%Back to Jenkins}"/>
+        </l:tasks>
+    </l:side-panel>
+    <l:main-panel>
+        <form action="submit" method="post">
+            <table>
+                <tr>
+                    <label>Choose profile:</label>
+                    <select name="profile" id="profile" onchange="setTestsCheckboxs()">
+                        <j:forEach var="profile" items="${it.getProfiles()}" varStatus="loop">
+                            <option name="${profile.getName()}" value="${profile.getName()}" title="${profile.getName()}">${profile.getName()}</option>
+                        </j:forEach>
+                    </select>
+                    <f:submit name="profile-remove-submit" value="Remove"/>
+<!--                    <f:entry title="Choose profile: " field="profile">
+                        <f:select/>
+                    </f:entry>-->
+                </tr>
+                <br/>
+                <tr>
+                    <label>New profile name:</label>
+                    <input type="textbox" name="profile-add-name" value=""/>
+                    <f:submit name="profile-add-submit" value="Add"/>
+                </tr>
+            </table>
+            
+            <table>
+                <j:forEach var="group" items="${it.getTests()}" varStatus="loop">
+                    <tr>
+                        <td>
+                            <p><b>${group.getName()}</b></p>
+                            <!--<f:checkbox name="${group.getName()}" value="${group.getName()}" title="${group.getName()}" checked="${group.isChecked()}"/>-->
+                        </td>
+                    </tr>
+                    <j:forEach var="test" items="${group.getTests()}" varStatus="loop">
+                        <tr>
+                            <td style="text-indent:25px;">
+                                <f:checkbox name="test_${test.getName()}" value="${test.getName()}" title="${test.getName()}" checked="${test.isChecked()}"/>
+                            </td>
+                        </tr>
+                    </j:forEach>
+                </j:forEach>
+                <tr>
+                    <td>
+                        <f:submit name="profile-save-submit" value="Save"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </l:main-panel>
+</l:layout>
+</j:jelly>

@@ -1,0 +1,101 @@
+<?xml version="1.0" ?>
+<ATTRepository>
+  <Setup>
+    <Unit>
+      <Name>unit_1</Name>
+      <PassedValidation>Error</PassedValidation>
+      <Status>CommTelnet: Open telnet failed with No route to host .</Status>
+    </Unit>
+    <Unit>
+      <Name>unit_2</Name>
+      <PassedValidation>Error</PassedValidation>
+      <Status>CommTelnet: Open telnet failed with No route to host .</Status>
+    </Unit>
+  </Setup>
+  <TestSuite>
+    <Test>
+      <Name>Basic_enable_equipped</Name>
+      <Package>Genesis_Basic_Tests</Package>
+      <Module>SHELF_MANAGER_ENTITY</Module>
+      <Description>The purpose of this test is enable all slots with card status equipped.</Description>
+      <SetupSupported>No</SetupSupported>
+    </Test>
+    <Test>
+      <Name>IFM_validate</Name>
+      <Package>Genesis_IFM_Tests</Package>
+      <Module>INTERFACE_MANAGER_ENTITY</Module>
+      <Description>The purpose of this test is to validate the behavior of the IFM.</Description>
+      <SetupSupported>No</SetupSupported>
+    </Test>
+    <Test>
+      <Name>P2P</Name>
+      <Package>Genesis_Services_P2P_Tests</Package>
+      <Module>POINT_TO_POINT_ENTITY</Module>
+      <Description>The purpose of this test is to validate the behavior of sync Point to Point services.</Description>
+      <SetupSupported>No</SetupSupported>
+    </Test>
+    <Test>
+      <Name>Slot_basic_test</Name>
+      <Package>Genesis_Slot_Tests</Package>
+      <Module>SHELF_MANAGER_ENTITY</Module>
+      <Description>The purpose of this test is to validate basic slot configuration.</Description>
+      <SetupSupported>No</SetupSupported>
+    </Test>
+    <Test>
+      <Name>Slot_basic_test</Name>
+      <Package>Genesis_Slot_Tests</Package>
+      <Module>SHELF_MANAGER_ENTITY</Module>
+      <Description> </Description>
+      <SetupSupported>No</SetupSupported>
+    </Test>
+    <Test>
+      <Name>Slot_fuzz_test</Name>
+      <Package>Genesis_Slot_Tests</Package>
+      <Module>SHELF_MANAGER_ENTITY</Module>
+      <Description> </Description>
+      <SetupSupported>No</SetupSupported>
+    </Test>
+    <Test>
+      <Name>Slot_restore_test</Name>
+      <Package>Genesis_Slot_Tests</Package>
+      <Module>SHELF_MANAGER_ENTITY</Module>
+      <Description> </Description>
+      <SetupSupported>No</SetupSupported>
+    </Test>
+    <Test>
+      <Name>Sync_SSM</Name>
+      <Package>Genesis_Sync_SSM_Tests</Package>
+      <Module>SYNC_ENTITY</Module>
+      <Description>The purpose of this test is to validate the behavior of sync SSMs.</Description>
+      <SetupSupported>No</SetupSupported>
+    </Test>
+    <Test>
+      <Name>License_callbacks</Name>
+      <Package>Genesis_License_Tests</Package>
+      <Module>LICENSE_ENTITY</Module>
+      <Description> </Description>
+      <SetupSupported>No</SetupSupported>
+    </Test>
+    <Test>
+      <Name>License_services</Name>
+      <Package>Genesis_License_Tests</Package>
+      <Module>LICENSE_ENTITY</Module>
+      <Description> </Description>
+      <SetupSupported>No</SetupSupported>
+    </Test>
+    <Test>
+      <Name>License_path_protected_tdm_feature</Name>
+      <Package>Genesis_License_Tests</Package>
+      <Module>LICENSE_ENTITY</Module>
+      <Description> </Description>
+      <SetupSupported>No</SetupSupported>
+    </Test>
+    <Test>
+      <Name>Radio</Name>
+      <Package>Genesis_Radio_Tests</Package>
+      <Module>LICENSE_ENTITY</Module>
+      <Description>Various tests performed on radio</Description>
+      <SetupSupported>No</SetupSupported>
+    </Test>
+  </TestSuite>
+</ATTRepository>

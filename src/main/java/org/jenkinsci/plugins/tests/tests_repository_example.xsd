@@ -1,0 +1,40 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="ATTRepository">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Setup">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Unit" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="Name"/>
+                    <xs:element type="xs:string" name="PassedValidation"/>
+                    <xs:element type="xs:string" name="Status"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="TestSuite">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Test" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="Name"/>
+                    <xs:element type="xs:string" name="Package"/>
+                    <xs:element type="xs:string" name="Module"/>
+                    <xs:element type="xs:string" name="Description"/>
+                    <xs:element type="xs:string" name="SetupSupported"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
