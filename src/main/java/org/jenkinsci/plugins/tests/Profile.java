@@ -60,8 +60,8 @@ public class Profile
     
     public void add(ITest test) throws IOException
     {
-        FileWriter out = new FileWriter(this.profileFile);
-        out.write(test.getName());
+        FileWriter out = new FileWriter(this.profileFile, true);
+        out.write(test.getGroup() + "|" + test.getName() + "\n");
         out.close();
         this.tests.add(test);
     }
@@ -99,7 +99,7 @@ public class Profile
             br = new BufferedReader(new InputStreamReader(fis, Charset.forName("UTF-8")));
             while ((line = br.readLine()) != null) 
             {
-                String testName = line;
+                String testName = line.substring(line.indexOf('|') + 1);
                 testsList.add(testName);
             }
 

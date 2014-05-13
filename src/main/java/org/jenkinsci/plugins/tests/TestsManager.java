@@ -6,15 +6,11 @@ import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.RootAction;
 import hudson.security.Permission;
-import hudson.util.ListBoxModel;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -30,6 +26,7 @@ public class TestsManager implements RootAction, Describable<TestsManager> {
     public static String ProfilesDBPath;
     public ArrayList<ITest> testRepository;
     public ArrayList<Profile> profiles;
+    public String currentChosenProfile = "";
     
     public TestsManager()
     {
@@ -96,6 +93,7 @@ public class TestsManager implements RootAction, Describable<TestsManager> {
         String addProfileSubmit = req.getParameter("profile-add-submit");
         String removeProfileSubmit = req.getParameter("profile-remove-submit");
         String saveProfileSubmit = req.getParameter("profile-save-submit");
+        String updateTestsList = req.getParameter("update-tests-list");
         
 //        Iterator keySetIt = req.getParameterMap().keySet().iterator();
 //        Object key;
@@ -132,6 +130,7 @@ public class TestsManager implements RootAction, Describable<TestsManager> {
                     profile.removeFromDB();;
                     this.profiles.remove(profile);
                 }
+                this.currentChosenProfile = profileName;
             }
         }
         else if (isBlank(new String[]{saveProfileSubmit}) == false)
@@ -164,11 +163,24 @@ public class TestsManager implements RootAction, Describable<TestsManager> {
                         }
     //                    System.out.println("key: " + key.toString() + ", value: " + req.getParameter(key.toString()));
                     }
+                    this.currentChosenProfile = profileName;
                 }
                 else
                 {
                     System.out.println("[ERROR] profile: " +  profileName + " not found");
                 }
+            }
+        }
+        else if(updateTestsList != null)
+        {
+            try {
+                int exitCode = ATTFramework.updateTestsList();
+                if (exitCode != 0){
+                    throw new IOException("[ERROR] updateTestsList return a non zero exit code: " + exitCode);
+                }
+            } catch (InterruptedException | IOException ex) {
+                System.out.println("[ERROR] Failed to update the tests list");
+                Logger.getLogger(TestsManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
@@ -180,13 +192,14 @@ public class TestsManager implements RootAction, Describable<TestsManager> {
         File profileDBDir = new File(TestsManager.ProfilesDBPath);
         if (profileDBDir.isDirectory() == true)
         {
-            this.profiles =new ArrayList<Profile>();
+            this.profiles = new ArrayList<Profile>();
             File[] profileFiles = profileDBDir.listFiles(new ProfilesFileFilter());
             for (File profileFile : profileFiles)
             {
                 try {
                     Profile profile = new Profile(profileFile);
                     ArrayList<String> testsNameList = profile.getTestsNameList();
+                    profile.removeAllTests();
                     for (String testName : testsNameList)
                     {
                         ITest test = null;
@@ -240,6 +253,14 @@ public class TestsManager implements RootAction, Describable<TestsManager> {
         return groupsList;
     }
 
+    public String getChosenProfile()
+    {
+        System.out.println("In getChosenProfile()");
+        String chosenProfile = this.currentChosenProfile;
+        System.out.println(chosenProfile);
+        this.currentChosenProfile = "";
+        return chosenProfile;
+    }
         
     @JavaScriptMethod
     public ArrayList<String> doGetTestsInProfile(String profileName)
@@ -279,34 +300,6 @@ public class TestsManager implements RootAction, Describable<TestsManager> {
     @Extension
     public static final class TestsDescriptorImpl extends TestsConfigDescriptor
     {
-//        ArrayList<Profile> profiles = null;
-//        
-//        
-//        public ListBoxModel doFillProfileItems()
-//        {
-//            ListBoxModel m = new ListBoxModel();
-//            File profileDBDir = new File(TestsManager.ProfilesDBPath);
-//            if (profileDBDir.isDirectory() == true)
-//            {
-//                File[] profileFiles = profileDBDir.listFiles(new ProfilesFileFilter());
-//                for (File profileFile : profileFiles)
-//                {
-//                    Profile profile = null;
-//                    
-//                    // Get profile name
-//                    String fileName = profileFile.getName();
-//                    int indexOfSuffix = fileName.indexOf('.');
-//                    String profileName = fileName.substring(0, indexOfSuffix);
-//                    
-//                    profile = new Profile(profileName);
-//                    
-//                }
-//                
-//            }
-//            return m;
-//        }
-//        
-//        private
     } 
 
     private class ProfilesFileFilter implements FileFilter 

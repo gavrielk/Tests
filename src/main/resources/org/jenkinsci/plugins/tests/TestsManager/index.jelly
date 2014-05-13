@@ -18,20 +18,29 @@
                 <tr>
                     <label>Choose profile:</label>
                     <select name="profile" id="profile" onchange="setTestsCheckboxs()">
+                        <j:set var="chosenProfile" value="${it.getChosenProfile()}"/>
                         <j:forEach var="profile" items="${it.getProfiles()}" varStatus="loop">
-                            <option name="${profile.getName()}" value="${profile.getName()}" title="${profile.getName()}">${profile.getName()}</option>
+                            <j:set var="currProfile" value="${profile.getName()}"/>
+                            <j:if test="${currProfile == chosenProfile}">
+                                <option name="${profile.getName()}" value="${profile.getName()}" title="${profile.getName()}" selected="true">${profile.getName()}</option>
+                            </j:if>
+                            <j:if test="${currProfile != chosenProfile}">
+                                <option name="${profile.getName()}" value="${profile.getName()}" title="${profile.getName()}">${profile.getName()}</option>
+                            </j:if>
                         </j:forEach>
                     </select>
                     <f:submit name="profile-remove-submit" value="Remove"/>
-<!--                    <f:entry title="Choose profile: " field="profile">
-                        <f:select/>
-                    </f:entry>-->
                 </tr>
                 <br/>
                 <tr>
                     <label>New profile name:</label>
                     <input type="textbox" name="profile-add-name" value=""/>
                     <f:submit name="profile-add-submit" value="Add"/>
+                </tr>
+                <tr>
+                    <td>
+                        <f:submit name="update-tests-list" value="Update tests list"/>
+                    </td>
                 </tr>
             </table>
             

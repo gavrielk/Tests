@@ -6,8 +6,20 @@
 
 package org.jenkinsci.plugins.tests.ATT;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -28,7 +40,10 @@ import org.jenkinsci.plugins.tests.ITestTool;
  */
 public class ATTFramework implements ITestTool
 {
+    String testSuitePath = "";
     String testsRepositoryXMLPath = "";
+    static String updateTestsListScript = "";
+    static final File ATTFrameworkLog = new File("/var/log/jenkins/ATT.log");
     String name;
     ArrayList<ITest> tests = new ArrayList<>();
     ArrayList<Group> groups = new ArrayList<>();
@@ -37,8 +52,18 @@ public class ATTFramework implements ITestTool
     public ATTFramework() throws JAXBException
     {
         String username = System.getProperty("user.name");
-        this.testsRepositoryXMLPath = "/home/" + username + "/BuildSystem/cc-views/" + username + "_ATT_1.1_int/vobs/HostTool_AT/PyATT/Test_Suite/tests_repository.xml";
-        
+        this.testSuitePath = "/home/" + username + "/BuildSystem/cc-views/" + username + "_ATT_1.1_int/vobs/HostTool_AT/PyATT/Test_Suite";
+        this.testsRepositoryXMLPath = this.testSuitePath + "/tests_repository.xml";
+        ATTFramework.updateTestsListScript = this.testSuitePath + "/update_tests_list.sh";
+        if (ATTFramework.ATTFrameworkLog.exists() == false)
+        {
+            try {
+                ATTFramework.ATTFrameworkLog.createNewFile();
+            } catch (IOException ex) {
+                System.out.println("Log file (" + ATTFramework.ATTFrameworkLog.getAbsolutePath() + ") couldn't be created");
+                Logger.getLogger(ATTFramework.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         ClassLoader cl = org.jenkinsci.plugins.tests.ATT.ObjectFactory.class.getClassLoader();
         this.jaxbContext = JAXBContext.newInstance("org.jenkinsci.plugins.tests.ATT", cl);
     }
@@ -97,6 +122,33 @@ public class ATTFramework implements ITestTool
                 this.groups.add(group);
             }
         }
+    }
+
+    public static synchronized int updateTestsList() throws IOException, InterruptedException
+    {
+        // Redirecting the output to the ATT.log file
+        if (new File(ATTFramework.updateTestsListScript).exists() == true)
+        {
+            ProcessBuilder.Redirect redirect = ProcessBuilder.Redirect.to(ATTFramework.ATTFrameworkLog);
+            ArrayList<String> command = new ArrayList<String>();
+            command.add(ATTFramework.updateTestsListScript);
+            System.out.println("Update command: " + command.get(0));
+            return executeScript(command, redirect);
+        }
+        else
+        {
+            System.out.println("[ERROR] update_tests_list.sh not found under " + ATTFramework.updateTestsListScript);
+            return 1;
+        }
+    }
+    
+    private static int executeScript(ArrayList<String> command, ProcessBuilder.Redirect redirect) throws IOException, InterruptedException
+    {
+        ProcessBuilder pb = new ProcessBuilder().inheritIO();
+        pb.redirectErrorStream(true);
+        
+        pb.redirectOutput(redirect);
+        return pb.command(command).start().waitFor();
     }
     
     

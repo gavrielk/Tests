@@ -6,7 +6,6 @@
 
 package org.jenkinsci.plugins.tests;
 
-import org.jenkinsci.plugins.tests.ATT.ATTFramework;
 import java.util.ArrayList;
 
 /**
